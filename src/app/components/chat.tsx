@@ -4,12 +4,23 @@ import {
   useCurrentWallet,
   useSignAndExecuteTransaction,
 } from "@mysten/dapp-kit";
-import { Transaction  } from "@mysten/sui/transactions";
+import { Transaction } from "@mysten/sui/transactions";
 import { useState, useEffect, useRef } from "react";
+
+type MessageData = {
+  url: string;
+  revised_prompt: string;
+};
+
+type MessageText =
+  | string
+  | {
+      data?: MessageData[];
+    };
 
 type Message = {
   id: number;
-  text: any;
+  text: MessageText;
   sender: "user" | "system";
 };
 
@@ -32,8 +43,6 @@ export default function TerminalChat() {
     description: string,
     imageUrl: string
   ) => {
-
-
     try {
       const tx = new Transaction();
 
@@ -70,8 +79,7 @@ export default function TerminalChat() {
   }, [messagesEndRef]); //Fixed unnecessary dependency
 
   const handleSendMessage = async (e: React.FormEvent) => {
-
-    setDigest('')
+    setDigest("");
 
     e.preventDefault();
     if (inputMessage.trim() !== "") {
@@ -118,7 +126,6 @@ export default function TerminalChat() {
             systemMessage,
             imageMessage,
           ]);
-
         } else {
           const systemMessage: Message = {
             id: Date.now(),
@@ -147,109 +154,116 @@ export default function TerminalChat() {
       <div className="w-full max-w-3xl h-[80vh] flex flex-col bg-terminal-bg text-terminal-text font-mono p-4 border border-terminal-border rounded-lg overflow-hidden">
         <div className="flex-1 overflow-y-auto space-y-2 mb-4">
           {messages.length === 0 ? (
-              <div className="text-terminal-text text-white">
-                 {connectionStatus !== "connected" ? "Please connect and type" : "Please type"} something like: generate a cat image
+            <div className="text-terminal-text text-white">
+              {connectionStatus !== "connected"
+                ? "Please connect and type"
+                : "Please type"}{" "}
+              something like: generate a cat image
             </div>
-          ): messages.map((message) => {
-            if (
-              message.sender !== "user" &&
-              message.text.data?.[0].url.includes("https")
-            ) {
+          ) : (
+            messages.map((message) => {
+              if (
+                message.sender !== "user" &&
+                typeof message.text !== "string" &&
+                message.text.data?.[0].url.includes("https")
+              ) {
+                return (
+                  <div
+                    key={message.id}
+                    className="break-words text-terminal-text text-white"
+                  >
+                    <span className="text-terminal-text text-white">
+                      $ {message.text.data?.[0].revised_prompt}{" "}
+                    </span>
+                    <img
+                      src={message.text.data?.[0].url}
+                      alt="Image"
+                      className="max-w-full h-auto"
+                    />
+
+                    {connectionStatus === "connected" && !digest ? (
+                      <>
+                        <h1>do you want to mint this image?</h1>
+                        <div className="flex w-full justify-center">
+                          {message.text.data && (
+                            <button
+                              onClick={() =>
+                                typeof message.text !== "string" &&
+                                message.text.data &&
+                                handleMint(
+                                  "ai minting",
+                                  message.text.data?.[0].revised_prompt,
+                                  message.text.data?.[0].url
+                                )
+                              }
+                              className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                            >
+                              Yes
+                            </button>
+                          )}
+                          <button className="border border-terminal-border text-terminal-text  px-4 py-2 rounded">
+                            No
+                          </button>
+                        </div>
+                      </>
+                    ) : digest ? (
+                      <>
+                        {" "}
+                        <div className="m-auto text-center w-full">
+                          <div className="flex justify-center flex-wrap items-center align-center text-green-500">
+                            <h1 className=" ">NFT Minted Successfully!</h1>
+                          </div>
+                          <div>
+                            Check your transaction on{" "}
+                            <a
+                              href={`https://suiscan.xyz/devnet/tx/${digest}`}
+                              target="blank"
+                              className="text-terminal-text underline"
+                            >
+                              Sui Scan
+                            </a>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <h1> Please connect to your SUI account</h1>
+                    )}
+                  </div>
+                );
+              }
+
+              const lines =
+                typeof message.text === "string" && message.text.includes("\n")
+                  ? message.text.split("\n")
+                  : [message.text];
               return (
                 <div
                   key={message.id}
-                  className="break-words text-terminal-text text-white"
+                  className={
+                    message.sender === "user"
+                      ? "break-words text-terminal-text font-bold"
+                      : "break-words text-terminal-text text-white"
+                  }
                 >
-                  <span className="text-terminal-text text-white">
-                    $ {message.text.data?.[0].revised_prompt}{" "}
-                  </span>
-                  <img
-                    src={message.text.data?.[0].url}
-                    alt="Image"
-                    className="max-w-full h-auto"
-                  />
-
-                  {connectionStatus === "connected" && !digest ? (
-                    <>
-                      <h1>do you want to mint this image?</h1>
-                      <div className="flex w-full justify-center">
-                        <button
-                          onClick={() =>
-                            handleMint(
-                              "ai minting",
-                              message.text.data?.[0].revised_prompt,
-                              message.text.data?.[0].url
-                            )
-                          }
-                          className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                        >
-                          Yes
-                        </button>
-                        <button className="border border-terminal-border text-terminal-text  px-4 py-2 rounded">
-                          No
-                        </button>
-                      </div>
-                    </>
-                  ) : digest ? (
-                    <>
-                      {" "}
-                      <div className="m-auto text-center w-full">
-                        <div className="flex justify-center flex-wrap items-center align-center text-green-500">
-                          <h1 className=" ">
-
-                            NFT Minted Successfully!
-                          </h1>
-                        </div>
-                        <div>
-                          Check your transaction on{" "}
-                          <a
-                            href={`https://suiscan.xyz/devnet/tx/${digest}`}
-                            target="blank"
-                            className="text-terminal-text underline"
-                          >
-                            Sui Scan
-                          </a>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <h1> Please connect to your SUI account</h1>
-                  )}
+                  <div>
+                    <span
+                      className={
+                        message.sender === "user"
+                          ? "text-terminal-text font-bold"
+                          : "text-terminal-text text-white"
+                      }
+                    >
+                      {message.sender === "user" ? "> " : "$ "}
+                    </span>
+                    {lines[0]}
+                  </div>
+                  {lines.slice(1).map((line: string, index: number) => (
+                    <div key={index}>{line}</div>
+                  ))}
                 </div>
               );
-            }
-
-            const lines =
-              !message?.text?.data && message?.text?.includes("\n")
-                ? message.text.split("\n")
-                : [message.text];
-            return (
-              <div
-                key={message.id}
-                className={
-                  message.sender === "user"
-                    ? "break-words text-terminal-text font-bold"
-                    : "break-words text-terminal-text text-white"
-                }
-              >
-                <div>
-                  <span
-                    className={
-                      message.sender === "user"
-                        ? "text-terminal-text font-bold"
-                        : "text-terminal-text text-white"
-                    }
-                  >
-                    {message.sender === "user" ? "> " : "$ "}
-                  </span>
-                  {lines[0]}
-                </div>
-                {lines.slice(1).map((line: string, index: number) => (
-                  <div key={index}>{line}</div>
-                ))}
-              </div>
-            );
-          })}
+            })
+          )}
 
           {isLoading && (
             <div className="text-terminal-text text-white animate-pulse">
