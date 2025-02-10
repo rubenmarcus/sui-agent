@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   createNetworkConfig,
@@ -8,18 +8,18 @@ import {
 import { getFullnodeUrl } from "@mysten/sui/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@mysten/dapp-kit/dist/index.css";
-import { JSX } from "react";
+import { JSX, ReactNode } from "react";
 
-export const SuiProvider = ({ children }): JSX.Element => {
+export const SuiProvider = ({ children }: { children: ReactNode }): JSX.Element => {
   const { networkConfig } = createNetworkConfig({
-    localnet: { url: getFullnodeUrl("localnet") },
-    mainnet: { url: getFullnodeUrl("mainnet") },
+    devnet: { url: getFullnodeUrl("devnet") },
   });
   const queryClient = new QueryClient();
-  return(
-  <QueryClientProvider client={queryClient}>
-    <SuiClientProvider networks={networkConfig} defaultNetwork="localnet">
-      <WalletProvider>{children}</WalletProvider>
-    </SuiClientProvider>
-  </QueryClientProvider>);
+  return (
+    <QueryClientProvider client={queryClient}>
+      <SuiClientProvider networks={networkConfig} defaultNetwork="devnet">
+        <WalletProvider>{children}</WalletProvider>
+      </SuiClientProvider>
+    </QueryClientProvider>
+  );
 };

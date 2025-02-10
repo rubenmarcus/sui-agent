@@ -2,20 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+body {
+  @apply bg-gradient-to-br from-gradient-start to-gradient-end text-terminal-text;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Blinking cursor effect */
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+input[type="text"]:not(.focused) {
+  caret-color: transparent;
+}
+
+input[type="text"]:not(.focused)::after {
+  content: "|";
+  animation: blink 1s step-end infinite;
+  color: #008ae6;
+}
+
+/* Override the default outline for focused input */
+input[type="text"]:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Custom caret color for focused input */
+input[type="text"].focused {
+  caret-color: #008ae6;
+}
+
+/* Gradient animation */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientAnimation 15s ease infinite;
+}
+
+h1{
+  font-size: 20px;
+  padding-top:20px;
+  width: 100%;
+  text-align: center;
+}
+
+img{
+  width: 60%;
+  margin:0 auto;
+  margin-top:20px;
 }
