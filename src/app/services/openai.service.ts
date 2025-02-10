@@ -1,10 +1,9 @@
 import OpenAI from "openai";
-import openApiSpec from "../spec/openapi.json"; // Import your OpenAPI spec
 import { generateImageOpenAi } from "./generate-image.service";
 
 const openai = new OpenAI();
 
-export async function interpretAndExecute(input: string): Promise<any> {
+export async function interpretAndExecute(input: string): Promise<unknown> {
   try {
     // Use OpenAI to interpret the input
 
