@@ -158,7 +158,7 @@ export default function TerminalChat() {
               {connectionStatus !== "connected"
                 ? "Please connect and type"
                 : "Please type"}{" "}
-              something like: generate a cat image
+              something like: generate a image of a cat
             </div>
           ) : (
             messages.map((message) => {
