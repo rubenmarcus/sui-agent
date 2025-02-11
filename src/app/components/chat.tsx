@@ -3,7 +3,6 @@
 import {
   useCurrentWallet,
   useSignAndExecuteTransaction,
-  useSignTransaction,
 } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { useState, useEffect, useRef } from "react";
@@ -26,7 +25,6 @@ type Message = {
 };
 
 const packageObjectId = process.env.NEXT_PUBLIC_PACKAGE;
-const moduleName = "devnet_nft";
 
 export default function TerminalChat() {
   const [messages, setMessages] = useState<Message[]>([]);
