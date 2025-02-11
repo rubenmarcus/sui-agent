@@ -3,6 +3,7 @@
 import {
   useCurrentWallet,
   useSignAndExecuteTransaction,
+  useSignTransaction,
 } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { useState, useEffect, useRef } from "react";
@@ -35,7 +36,7 @@ export default function TerminalChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [digest, setDigest] = useState("");
 
-  const { mutate: signAndExecute } = useSignAndExecuteTransaction();
+  const { mutateAsync: signTransaction } = useSignAndExecuteTransaction();
   const { connectionStatus } = useCurrentWallet();
 
   const handleMint = async (
@@ -47,28 +48,24 @@ export default function TerminalChat() {
       const tx = new Transaction();
 
       tx.moveCall({
-        target: `${packageObjectId}::${moduleName}::mint`,
+        target: `${packageObjectId}::devnet_nft::mint`,
         arguments: [
-          tx.pure(new TextEncoder().encode(name)),
-          tx.pure(new TextEncoder().encode(description)),
-          tx.pure(new TextEncoder().encode(imageUrl)),
+          tx.pure.string(name),
+          tx.pure.string(description),
+          tx.pure.string(imageUrl),
         ],
       });
+      // Sign and execute the transaction
 
-      const result = signAndExecute(
-        {
-          transaction: new Transaction(),
-          chain: "sui:devnet",
-        },
-        {
-          onSuccess: (result) => {
-            console.log("executed transaction", result);
-            setDigest(result.digest);
-          },
-        }
-      );
+      // Execute the transaction
+      const result = await signTransaction({
+        transaction: tx, // Use the same transaction object
+        chain: "sui:devnet",
+      });
 
       console.log("NFT Minted successfully:", result);
+
+      setDigest(result.digest)
     } catch (error) {
       console.error("Error minting NFT:", error);
     }
@@ -93,7 +90,6 @@ export default function TerminalChat() {
       setIsLoading(true); // Start loading
 
       try {
-        // Call the server-side API endpoint
         const response = await fetch("/api/chat", {
           method: "POST",
           headers: {
@@ -191,7 +187,7 @@ export default function TerminalChat() {
                                 typeof message.text !== "string" &&
                                 message.text.data &&
                                 handleMint(
-                                  "ai minting",
+                                  message.text.data?.[0].revised_prompt,
                                   message.text.data?.[0].revised_prompt,
                                   message.text.data?.[0].url
                                 )

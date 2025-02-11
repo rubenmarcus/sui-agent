@@ -12,7 +12,6 @@
     "@mysten/dapp-kit": "^0.14.50",
     "@mysten/sui": "^1.21.2",
     "@tanstack/react-query": "^5.66.0",
-    "lucide-react": "^0.475.0",
     "next": "15.1.6",
     "openai": "^4.83.0",
     "react": "^19.0.0",
