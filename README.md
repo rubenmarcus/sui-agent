@@ -1,5 +1,12 @@
 # Sui AI Image Generator & NFT Minter
 
+
+<img src="https://github.com/user-attachments/assets/24238988-b742-4125-8ac9-406dcb73b5bd" width="500" height="500" />
+
+<a href="https://suiscan.xyz/devnet/object/0xf2815f0c81ef92a045842ae8c645308366367fc5f5ab40d563735611a9062761/tx-blocks" target="blank"> Nft Link </a> |  <a href="https://suiscan.xyz/devnet/tx/7e4JH3fvRpgM7Ww2piGn8i44ZKK24uZo3rBhnJbnR6J4" target="blank"> Transaction Link </a>
+
+
+
 Built using Open AI, Next.js and Sui TS SDK.
 
 
