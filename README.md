@@ -46,6 +46,8 @@ https://suiscan.xyz/devnet/account/0x079d4acd30b69514ad0b187490b188398c002e6c099
 
 https://github.com/user-attachments/assets/8e1a9b6b-eb82-4922-99ba-1b22a12a3a83
 
+https://github.com/user-attachments/assets/e91e16aa-737e-4781-b0ec-1055c7fc88d7
+
 ## TODO/Roadmap
 
 - Work on store the media generated on Walrus instead of using OpenAI urls
@@ -55,5 +57,4 @@ https://github.com/user-attachments/assets/8e1a9b6b-eb82-4922-99ba-1b22a12a3a83
 
 
 
-https://github.com/user-attachments/assets/e91e16aa-737e-4781-b0ec-1055c7fc88d7
 
