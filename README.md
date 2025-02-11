@@ -8,10 +8,25 @@ Built using Open AI, Next.js and Sui TS SDK.
 
 ## Instructions
 
-add a env file with the following
+```
+1. Get your OPEN AI API Key
+2. Deploy a SUI NFT Mint Contract address on https://ide.bitslab.xyz/ on DevNet
+ 2.1 Arguments for Minting method should be String.
+```
 
-OPENAI_API_KEY=sk-proj-XYZ
-NEXT_PUBLIC_PACKAGE=0xXYZ
+add a .env file with the following
+
+```
+  OPENAI_API_KEY=sk-proj-XYZ
+  NEXT_PUBLIC_PACKAGE=0xXYz
+```
+
+then:
+
+```
+pnpm install
+pnpm run dev
+```
 
 
 ## Dev SUI Wallet Address:
